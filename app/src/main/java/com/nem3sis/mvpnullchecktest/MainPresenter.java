@@ -7,17 +7,36 @@ package com.nem3sis.mvpnullchecktest;
 public class MainPresenter extends MainPresenterNullCheck implements MainContract.Presenter {
 
     private final String message = "OK";
+    private final String TAG = MainPresenter.class.getSimpleName();
 
     @Override
     public void onButtonClick() {
-        BackgroundTask task = new BackgroundTask(new BackgroundTask.TaskCallback() {
+        MainDataStore.getInstance().get(new MainDataStore.MainDataStoreCallback() {
             @Override
-            public void onFinish() {
+            public void onFinishLoad(String message) {
                 getView().showToast(message);
             }
         });
-        task.startLongTask();
     }
+
+    @Override
+    protected void onDetachView() {
+        super.onDetachView();
+        MainDataStore.getInstance().unregister();
+    }
+
+    //    @Override
+//    public void onButtonClick() {
+//        BackgroundTask task = new BackgroundTask(new BackgroundTask.TaskCallback() {
+//            @Override
+//            public void onFinish() {
+//                getView().showToast(message);
+//            }
+//        });
+//        task.startLongTask();
+//    }
+
+
 
 
 }
