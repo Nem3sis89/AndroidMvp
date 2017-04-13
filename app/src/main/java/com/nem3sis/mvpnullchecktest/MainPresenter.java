@@ -13,7 +13,7 @@ public class MainPresenter extends MainPresenterNullCheck implements MainContrac
 
     @Override
     public void onButtonClick() {
-        MainDataStore.getInstance().fetch(this);
+        MainDataStore.getInstance().fetchData(this);
     }
 
     @Override
@@ -31,7 +31,7 @@ public class MainPresenter extends MainPresenterNullCheck implements MainContrac
     @Override
     protected void onAttachView(MainContract.View view) {
         super.onAttachView(view);
-        MainDataStore.getInstance().get(this); // load data or cache
+        MainDataStore.getInstance().getData(this); // load data or cache
     }
 
     @Override

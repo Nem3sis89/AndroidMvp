@@ -46,14 +46,14 @@ public class MainDataStore {
         this.callback = null;
     }
 
-    public void get(MainDataStoreCallback callback){
+    public void getData(MainDataStoreCallback callback){
         this.callback = callback;
-        Log.d(TAG, "get: client "+ callback.toString() + " registered");
+        Log.d(TAG, "getData: client "+ callback.toString() + " registered");
         if(!TextUtils.isEmpty(currentDate)){
-            Log.d(TAG, "get: returning cached result");
+            Log.d(TAG, "getData: returning cached result");
             sendResult();
         } else {
-            Log.d(TAG, "get: cache not found, fetching new data");
+            Log.d(TAG, "getData: cache not found, fetching new data");
             getCurrentDate();
         }
     }
@@ -69,7 +69,7 @@ public class MainDataStore {
         }
     }
 
-    public void fetch(MainDataStoreCallback callback){
+    public void fetchData(MainDataStoreCallback callback){
         this.callback = callback;
         getCurrentDate();
     }
