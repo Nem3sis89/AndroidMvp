@@ -36,9 +36,9 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
             }
         });
 
-        if(savedInstanceState!= null){
+        /*if(savedInstanceState!= null){
             onRestoreState(savedInstanceState);
-        }
+        }*/
     }
 
 
@@ -73,8 +73,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     }
 
     @Override
-    public void showToast(String message) {
-//        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-      mTextView.setText(message + String.valueOf(SystemClock.currentThreadTimeMillis()));
+    public void showMessage(String message) {
+      mTextView.setText(message);
     }
 }

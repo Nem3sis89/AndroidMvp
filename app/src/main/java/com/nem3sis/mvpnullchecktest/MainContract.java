@@ -7,10 +7,11 @@ package com.nem3sis.mvpnullchecktest;
 public interface MainContract {
 
     interface View {
-        void showToast(String message);
+        void showMessage(String message);
     }
 
     interface Presenter {
         void onButtonClick();
+        void getDateList();
     }
 }

@@ -3,6 +3,10 @@ package com.nem3sis.mvpnullchecktest;
 import android.text.TextUtils;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 /**
  * Created by Giorgio on 01/04/2017.
  */
@@ -10,23 +14,31 @@ import android.util.Log;
 public class MainDataStore {
 
     public interface MainDataStoreCallback {
-        void onFinishLoad(String message);
+        void onCurrentDate(String date);
+        void onListUpdated(List<String> dateList);
     }
 
     private static MainDataStore mInstance;
     private boolean isRunning = false;
-    private String messageResult;
+    private String currentDate;
+    private List<String> dateList;
     private MainDataStoreCallback callback;
 
     private final String TAG = MainDataStore.class.getSimpleName();
 
-    private MainDataStore(){}
+    private MainDataStore(){
+        this.dateList = new ArrayList<>();
+    }
 
     public static MainDataStore getInstance(){
         if(mInstance == null){
             mInstance = new MainDataStore();
         }
         return mInstance;
+    }
+
+    public void register(MainDataStoreCallback callback){
+        this.callback = callback;
     }
 
     public void unregister(){
@@ -37,39 +49,59 @@ public class MainDataStore {
     public void get(MainDataStoreCallback callback){
         this.callback = callback;
         Log.d(TAG, "get: client "+ callback.toString() + " registered");
-        if(!TextUtils.isEmpty(messageResult)){
+        if(!TextUtils.isEmpty(currentDate)){
             Log.d(TAG, "get: returning cached result");
             sendResult();
         } else {
             Log.d(TAG, "get: cache not found, fetching new data");
-            doLongTask();
+            getCurrentDate();
+        }
+    }
+
+    public void getDateList(MainDataStoreCallback callback){
+        this.callback = callback;
+        Log.d(TAG, "getDateList() called");
+        if(!dateList.isEmpty()){
+            Log.d(TAG, "getDateList: returning list");
+            sendDateList();
+        } else {
+            Log.d(TAG, "getDateList: list is empty!");
         }
     }
 
     public void fetch(MainDataStoreCallback callback){
         this.callback = callback;
-        doLongTask();
+        getCurrentDate();
     }
 
     private void sendResult() {
         if(callback != null){
             Log.d(TAG, "sendResult: returning result to client " + callback.toString());
-            callback.onFinishLoad(messageResult);
-            unregister();
+            callback.onCurrentDate(currentDate);
+            callback.onListUpdated(dateList);
+//            currentDate = null; //invalidate cache
         }
     }
 
-    private void doLongTask(){
+    private void sendDateList(){
+        if(callback != null){
+            callback.onListUpdated(dateList);
+        }
+    }
+
+    private void getCurrentDate(){
         if(isRunning)
             return;
-        Log.d(TAG, "doLongTask: no running task found, creating new one..");
+        Log.d(TAG, "getCurrentDate: no running task found, creating new one..");
         isRunning = true;
         BackgroundTask task = new BackgroundTask(new BackgroundTask.TaskCallback() {
             @Override
             public void onFinish() {
                 isRunning = false;
-                messageResult = "OK";
-                    sendResult();
+//                String formattedDate = SimpleDateFormat.getDateInstance().format(currentDate);
+                currentDate = new Date(System.currentTimeMillis()).toString();
+                dateList.add(currentDate);
+                sendResult();
             }
         });
         task.startLongTask();

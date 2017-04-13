@@ -14,7 +14,7 @@ public abstract class MainPresenterNullCheck {
     protected MainPresenterNullCheck(){
         this.mDummyView = new MainContract.View() {
             @Override
-            public void showToast(String message) {
+            public void showMessage(String message) {
                 //do nothing
             }
         };
